@@ -1,0 +1,13 @@
+{
+  "name": "node-dummy-server",
+  "version": "1.0.0",
+  "description": "A dummy server to relieve the front end dev from his/her whining for server endpoints",
+  "author": "Kumar Animesh",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "express": "^4.13.4",
+    "mongodb": "^2.1.18"
+  },
+  "devDependencies": {}
+}
