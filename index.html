@@ -12,9 +12,13 @@
 <h4>Dummy APIs</h4>
 
 <form id="api-input-container">
+    <select name="type" id="api-type">
+        <option value="GET">GET</option>
+        <option value="POST">POST</option>
+    </select>
     <input type="text" name="apiname" id="api-name">
-    <textarea name="req" id="api-req" cols="30" rows="10"></textarea>
-    <textarea name="resp" id="api-resp" cols="30" rows="10"></textarea>
+    <textarea name="req" id="api-req"></textarea>
+    <textarea name="resp" id="api-resp"></textarea>
     <button id="add-api">Add</button>
 </form>
 

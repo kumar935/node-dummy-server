@@ -20,9 +20,29 @@ function post(url, data, config) {
     }
   });
 }
+function renderCurrentApis(){
+  $("delete-api, edit-api").unbind();
+  get("apis").done(function(resp){
+    console.log("hi", resp);
+    var apisHTML = "";
+    resp.apis.map(function(api, index){
+      apisHTML = apisHTML + ApiListItemHTML(api);
+    });
+    $("api-container").html(apisHTML);
+
+    if(resp.apis.length !== 0){
+      $("delete-api").on("click", deleteApi);
+      $("edit-api").on("click", editApi);
+    }
+  });
+}
 function ApiListItemHTML(data){
   return (
     '<form class="api" id="'+ data._id +'">' +
+      '<select name="type">' +
+        (data.type === 'GET' ? '<option selected value="GET">GET</option>': '<option value="GET">GET</option>' ) +
+        (data.type === 'POST' ? '<option selected value="POST">POST</option>': '<option value="POST">POST</option>' ) +
+      '</select>' +
       '<input type="text" name="apiname" value="'+ data.apiname +'"/>' +
       '<textarea name="req">' + JSON.stringify(data.req) + '</textarea>' +
       '<textarea name="resp">' + JSON.stringify(data.resp) + '</textarea>'+
@@ -36,7 +56,7 @@ function ApiListItemHTML(data){
 function getApiPostData(formData){
   var postData = {};
   formData.map(function(item, index){
-    if(item.name === "apiname"){
+    if(item.name === "apiname" || item.name === "type"){
       postData[item.name] = item.value;
     } else {
       postData[item.name] = JSON.parse(item.value);
@@ -51,6 +71,7 @@ function addApi(e){
   post("api/add", postData).done(function(resp){
     if(resp && resp.success){
       console.log("api added! :)");
+      renderCurrentApis();
     }
   })
 }
@@ -58,6 +79,7 @@ function deleteApi(e,target,data){
   var idToDelete = $(e.target).attr('delete-id');
   post("api/delete/"+ idToDelete).done(function(resp){
     console.log(idToDelete + " deleted! :)");
+    renderCurrentApis();
   })
 }
 function editApi(e,target,data){
@@ -74,19 +96,6 @@ function editApi(e,target,data){
 $(
   function(){
     $("#add-api").on("click", addApi);
-
-    get("apis").done(function(resp){
-      console.log("hi", resp);
-      var apisHTML = "";
-      resp.apis.map(function(api, index){
-        apisHTML = apisHTML + ApiListItemHTML(api);
-      });
-      $("api-container").html(apisHTML);
-
-      if(resp.apis.length !== 0){
-        $("delete-api").on("click", deleteApi);
-        $("edit-api").on("click", editApi);
-      }
-    });
+    renderCurrentApis();
   }
 );

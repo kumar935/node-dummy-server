@@ -85,18 +85,33 @@ app.get('/*', function (req, res) {
   queriedRecord.toArray(function (err, result) {
     if (err) {
       console.log(err);
+      res.send();
     } else if (result.length) {
       console.log('Found:', result);
+      res.json(result[0].resp);
     } else {
       console.log('No document(s) found with defined "find" criteria!');
+      res.send();
     }
-    res.json(result[0].resp);
   });
 });
 
 app.post('/*', function (req, res) {
   console.log(req.originalUrl);
-  res.send();
+  var queryUrl = req.originalUrl;
+  var queriedRecord = mongoDBInstance.collection('apis').find({'apiname': queryUrl});
+  queriedRecord.toArray(function (err, result) {
+    if (err) {
+      console.log(err);
+      res.send();
+    } else if (result.length) {
+      console.log('Found:', result);
+      res.json(result[0].resp);
+    } else {
+      console.log('No document(s) found with defined "find" criteria!');
+      res.send();
+    }
+  });
 });
 
 app.listen(PORT, function () {
