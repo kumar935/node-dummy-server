@@ -6,7 +6,6 @@ var ObjectId = require('mongodb').ObjectID;
 var bodyParser = require('body-parser')
 
 var server;
-var indexTemplate;
 var mongoDBInstance;
 
 const PORT = 1234;
@@ -21,18 +20,18 @@ var app = express();
 //
 // app.use(allowCrossDomain);
 app.use(express.static(__dirname + '/resources'));
-app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 
 
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
 app.get('/apis', function (req, res) {
-  mongoDBInstance.collection('apis').find().toArray(function(err, result){
+  mongoDBInstance.collection('apis').find().toArray(function (err, result) {
     if (err) {
       console.log(err);
     } else if (result.length) {
@@ -43,14 +42,13 @@ app.get('/apis', function (req, res) {
     } else {
       console.log('No document(s) found with defined "find" criteria!');
     }
-
     res.json(final);
   });
 });
 
 app.post('/api/add', function (req, res) {
   var row = req.body;
-  if(row && row.apiname){
+  if (row && row.apiname) {
     mongoDBInstance.collection('apis').insertOne(row);
     res.json({'success': true});
   } else {
@@ -58,7 +56,20 @@ app.post('/api/add', function (req, res) {
   }
 });
 
-app.post('/api/delete/:id', function(req, res){
+app.post('/api/edit/:id', function (req, res) {
+  var rowId = req.params.id;
+  var newRow = req.body;
+  if(newRow && newRow.apiname){
+    mongoDBInstance.collection('apis').update({
+      '_id': ObjectId(rowId)
+    }, newRow);
+    res.json({'success': true});
+  } else {
+    res.json({'success': false});
+  }
+});
+
+app.post('/api/delete/:id', function (req, res) {
   var rowId = req.params.id;
   mongoDBInstance.collection('apis').remove({
     "_id": ObjectId(rowId)
@@ -66,10 +77,32 @@ app.post('/api/delete/:id', function(req, res){
   res.json({'success': true});
 });
 
+app.get('/*', function (req, res) {
+  console.log(req.originalUrl);
+  // var queryUrl = req.originalUrl.slice(4);
+  var queryUrl = req.originalUrl;
+  var queriedRecord = mongoDBInstance.collection('apis').find({'apiname': queryUrl});
+  queriedRecord.toArray(function (err, result) {
+    if (err) {
+      console.log(err);
+    } else if (result.length) {
+      console.log('Found:', result);
+    } else {
+      console.log('No document(s) found with defined "find" criteria!');
+    }
+    res.json(result[0].resp);
+  });
+});
+
+app.post('/*', function (req, res) {
+  console.log(req.originalUrl);
+  res.send();
+});
+
 app.listen(PORT, function () {
   console.log('Example app listening on port 1234!');
   var url = 'mongodb://localhost:27017/olpdummy';
-  MongoClient.connect(url, function(err, db) {
+  MongoClient.connect(url, function (err, db) {
     console.log("Connected correctly to server.");
     mongoDBInstance = db;
     // db.collection('test1').insertOne({
@@ -82,8 +115,6 @@ app.listen(PORT, function () {
     // db.close();
   });
 });
-
-
 
 
 //
