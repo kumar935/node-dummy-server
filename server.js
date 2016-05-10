@@ -3,7 +3,10 @@ var fs = require('fs');
 var express = require('express');
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectID;
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
+var request = require('request');
+var access_token = null;
+var refresh_token = null;
 
 var server;
 var mongoDBInstance;
@@ -24,6 +27,27 @@ app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
+
+function getAccessToken(callback){
+  if(access_token === null){
+    request.post(
+      "http://10.41.92.108:9005/oauth/token?grant_type=password&client_id=my-trusted-client&username=akshay.agarwal@unicommerce.com&password=uniware",
+      {},
+      function (error, response, body) {
+        // console.log("status: ", response.statusCode, "body", body);
+        console.log("type of login response",typeof body);
+        access_token = (JSON.parse(body)).access_token;
+        if(callback && typeof callback === "function"){
+          callback();
+        }
+      }
+    );
+  } else {
+    if(callback && typeof callback === "function"){
+      callback();
+    }
+  }
+}
 
 
 app.get("/", function (req, res) {
@@ -56,10 +80,71 @@ app.post('/api/add', function (req, res) {
   }
 });
 
+app.get('/yo', function (req, res) {
+  getAccessToken(function(){
+    console.log("accesstoken", access_token);
+    request(
+      {
+        url: 'http://10.41.92.108:8080/batch',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': access_token
+        }
+      },
+      function (error, response, body) {
+        // console.log("status: ", response.statusCode, "body", body);
+        res.json(JSON.parse(body));
+      }
+    );
+  });
+
+});
+
+app.post('/api/sync', function(req, res){
+  var syncData = req.body;
+  switch(syncData.type){
+    case 'GET':
+      getAccessToken(function(){
+        request(
+          {
+            url: syncData.uri,
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': access_token
+            }
+          },
+          function (error, response, body) {
+            // console.log("status: ", response.statusCode, "body", body);
+            res.json(JSON.parse(body));
+          }
+        );
+      });
+      break;
+    case 'POST':
+      getAccessToken(function(){
+        request.post(
+          {
+            url: syncData.uri,
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': access_token
+            }
+          },
+          syncData.req,
+          function (error, response, body) {
+            // console.log("status: ", response.statusCode, "body", body);
+            res.json(JSON.parse(body));
+          }
+        );
+      });
+      break;
+  };
+});
+
 app.post('/api/edit/:id', function (req, res) {
   var rowId = req.params.id;
   var newRow = req.body;
-  if(newRow && newRow.apiname){
+  if (newRow && newRow.apiname) {
     mongoDBInstance.collection('apis').update({
       '_id': ObjectId(rowId)
     }, newRow);

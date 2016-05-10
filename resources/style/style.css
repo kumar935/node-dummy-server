@@ -3,4 +3,22 @@
     padding: 0;
 }
 
+container{
+    display: flex;
+    flex-direction: row;
+}
 
+form#api-input-container{
+    display: flex;
+    flex-direction: column;
+}
+
+api-container{
+    width:100%;
+}
+
+form.api{
+    float: left;
+    display: flex;
+    flex-direction: column;
+}
