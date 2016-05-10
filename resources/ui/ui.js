@@ -95,7 +95,6 @@ function syncApi(e){
     $thisApi.find("[name='resp']").val(JSON.stringify(resp, undefined, 3));
   });
 }
-
 function renderCurrentApis(){
   $(".delete-api, .edit-api, .sync-api").unbind();
   get("apis").done(function(resp){

@@ -201,7 +201,7 @@ app.post('/*', function (req, res) {
 
 app.listen(PORT, function () {
   console.log('Example app listening on port 1234!');
-  var url = 'mongodb://localhost:27017/olpdummy';
+  var url = 'mongodb://10.41.92.110:27017/olpdummy';
   MongoClient.connect(url, function (err, db) {
     console.log("Connected correctly to server.");
     mongoDBInstance = db;
