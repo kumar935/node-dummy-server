@@ -1,4 +1,4 @@
-const DataServer = "http://localhost:1234/";
+const DataServer = "http://10.41.92.110:1234/";
 function get(url) {
   return $.ajax({
     type: "get",
