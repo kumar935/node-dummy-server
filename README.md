@@ -4,6 +4,8 @@
 
 This is a simple **express server** that would have the same endpoints as the actual back-end server that would be used in production. These endpoints will simply return dummy responses that would have the same json response structure as the responses from the actual production server (Assuming the back-end people have provided the would-be endpoints and json response structures)
 
+There also is a simple UI (in the `resources/` directory) from where apis can be added/deleted/edited/synced into the mongo collection where dummy responses are stored.
+
 ## Setup
 
 - You need mongodb running in the server instance that you'll be using this. 
