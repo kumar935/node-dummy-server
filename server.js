@@ -102,6 +102,7 @@ app.get('/yo', function (req, res) {
 
 app.post('/api/sync', function(req, res){
   var syncData = req.body;
+  console.log("type of sync post data", typeof syncData.postData);
   switch(syncData.type){
     case 'GET':
       getAccessToken(function(){
@@ -122,23 +123,25 @@ app.post('/api/sync', function(req, res){
       break;
     case 'POST':
       getAccessToken(function(){
-        request.post(
+        request(
           {
             url: syncData.uri,
+            method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               'Authorization': access_token
-            }
+            },
+            json: syncData.postData
           },
-          syncData.req,
           function (error, response, body) {
             // console.log("status: ", response.statusCode, "body", body);
-            res.json(JSON.parse(body));
+            console.log("error", error, "body", body);
+            res.json(body);
           }
         );
       });
       break;
-  };
+  }
 });
 
 app.post('/api/edit/:id', function (req, res) {
@@ -201,7 +204,7 @@ app.post('/*', function (req, res) {
 
 app.listen(PORT, function () {
   console.log('Example app listening on port 1234!');
-  var url = 'mongodb://10.41.92.110:27017/olpdummy';
+  var url = 'mongodb://127.0.0.1:27017/olpdummy';
   MongoClient.connect(url, function (err, db) {
     console.log("Connected correctly to server.");
     mongoDBInstance = db;
