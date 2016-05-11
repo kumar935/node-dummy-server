@@ -1,23 +1,31 @@
-*{
+* {
     margin: 0;
     padding: 0;
 }
 
-container{
+.fl {
+    float: left;
+}
+
+.fr {
+    float: right;
+}
+
+container {
     display: flex;
     flex-direction: row;
 }
 
-form#api-input-container{
+form#api-input-container {
     display: flex;
     flex-direction: column;
 }
 
-api-container{
-    width:100%;
+api-container {
+    width: 100%;
 }
 
-form.api{
+form.api {
     float: left;
     display: flex;
     flex-direction: column;

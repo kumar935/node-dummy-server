@@ -10,12 +10,27 @@
 <body>
 
 <h4>Dummy APIs</h4>
+<select id="projects">
+
+</select>
+<input type="text" id="new-project-input">
+<button id="add-project">+ Add New Project</button>
+<button id="delete-project" class="fr"> Delete this Project</button>
 
 <container>
     <form id="api-input-container">
         <select name="type" id="api-type">
             <option value="GET">GET</option>
             <option value="POST">POST</option>
+            <option value="PUT">PUT</option>
+            <option value="DELETE">DELETE</option>
+            <option value="PATCH">PATCH</option>
+            <option value="COPY">COPY</option>
+            <option value="HEAD">HEAD</option>
+            <option value="OPTIONS">OPTIONS</option>
+            <option value="LINK">LINK</option>
+            <option value="UNLINK">UNLINK</option>
+            <option value="PURGE">PURGE</option>
         </select>
         <input type="text" name="apiname" id="api-name">
         <textarea name="req" id="api-req" rows="10"></textarea>
