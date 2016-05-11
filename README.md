@@ -9,6 +9,6 @@ There also is a simple UI (in the `resources/` directory) from where apis can be
 ## Setup
 
 - You need mongodb running in the server instance that you'll be using this. 
-- Create a db and set the db name in `server.js` where connection is made with the mongoclient
-- Make the required changes in the port and URIs.
-- Simply run `node server.js` in the project root directory
+- Create a db and set the db name in `server.js` where connection is made with the mongoclient.
+- Make the required changes in the port and URIs for the mongodb client.
+- Simply run `node server.js` in the project root directory.
