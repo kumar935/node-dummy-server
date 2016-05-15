@@ -11,6 +11,40 @@
     float: right;
 }
 
+select {
+   -webkit-appearance: menulist-button;
+   height: 30px;
+   outline: none;
+   margin: 4px;
+}
+
+button {
+    padding: 5px;
+    background: white;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    margin: 4px;
+}
+
+input[type="text"]{
+    margin: 4px;
+    border-radius: 3px;
+    border: 1px solid #aaa;
+    padding: 5px;
+}
+
+textarea {
+    padding: 5px;
+    margin: 4px;
+    border-radius: 3px;
+    border: 1px solid #aaa;
+    outline: none;
+}
+
+#logo {
+    width: 40px;
+}
+
 container {
     display: flex;
     flex-direction: row;

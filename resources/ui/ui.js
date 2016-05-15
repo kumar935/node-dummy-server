@@ -41,10 +41,12 @@ function ApiListItemHTML(data) {
     '<input type="text" name="apiname" value="' + data.apiname + '"/>' +
     '<textarea name="req" rows="10">' + JSON.stringify(data.req, undefined, 3) + '</textarea>' +
     '<textarea name="resp" rows="10">' + JSON.stringify(data.resp, undefined, 3) + '</textarea>' +
-    '<button class="edit-api" edit-id="' + data._id + '">edit</button>' +
-    '<button class="delete-api" delete-id="' + data._id + '">delete</button>' +
-    '<input type="text" name="syncURI" value="http://10.41.92.108:8080"/>' +
-    '<button class="sync-api" sync-id="' + data._id + '">sync</button>' +
+    '<buttons>'+
+      '<button class="edit-api" edit-id="' + data._id + '">edit</button>' +
+      '<button class="delete-api" delete-id="' + data._id + '">delete</button>' +
+      '<input type="text" name="syncURI" value="http://10.41.92.108:8080"/>' +
+      '<button class="sync-api" sync-id="' + data._id + '">sync</button>' +
+    '</buttons>'+
     '</form>'
   );
 }
@@ -161,7 +163,6 @@ function syncApi(e) {
 }
 function renderCurrentApis(refreshProjectList) {
   $(".delete-api, .edit-api, .sync-api").unbind();
-
   renderProjectList(refreshProjectList).done(function () {
     currentProject = $("select#projects").val();
     get(currentProject + "/apis").done(function (resp) {
